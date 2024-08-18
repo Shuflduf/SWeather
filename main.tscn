@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://cea47gh2npyxr"]
+[gd_scene load_steps=3 format=3 uid="uid://cea47gh2npyxr"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_27w4e"]
+[ext_resource type="Script" path="res://settings.gd" id="2_swnw0"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -40,4 +41,103 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 71
 text = "Loading"
 
+[node name="Button" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -70.0
+offset_top = -31.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Settings
+"
+
+[node name="Window" type="Window" parent="."]
+title = "Settings"
+initial_position = 1
+size = Vector2i(330, 135)
+script = ExtResource("2_swnw0")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Window"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="Latitude" type="HBoxContainer" parent="Window/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+alignment = 1
+
+[node name="Label" type="Label" parent="Window/VBoxContainer/Latitude"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Latitude"
+
+[node name="VSeparator" type="VSeparator" parent="Window/VBoxContainer/Latitude"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="SpinBox" type="SpinBox" parent="Window/VBoxContainer/Latitude"]
+layout_mode = 2
+size_flags_vertical = 4
+min_value = -90.0
+max_value = 90.0
+step = 0.01
+value = 50.0
+
+[node name="Longitude" type="HBoxContainer" parent="Window/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+alignment = 1
+
+[node name="Label" type="Label" parent="Window/VBoxContainer/Longitude"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Longitude"
+
+[node name="VSeparator" type="VSeparator" parent="Window/VBoxContainer/Longitude"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="SpinBox" type="SpinBox" parent="Window/VBoxContainer/Longitude"]
+layout_mode = 2
+size_flags_vertical = 4
+min_value = -180.0
+max_value = 180.0
+step = 0.01
+value = -113.0
+
+[node name="Timezone" type="HBoxContainer" parent="Window/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+alignment = 1
+
+[node name="Label" type="RichTextLabel" parent="Window/VBoxContainer/Timezone"]
+layout_mode = 2
+size_flags_horizontal = 4
+tooltip_text = "https://en.wikipedia.org/wiki/List_of_tz_database_time_zones"
+bbcode_enabled = true
+text = "[url=https://en.wikipedia.org/wiki/List_of_tz_database_time_zones]Timezone"
+fit_content = true
+autowrap_mode = 0
+
+[node name="VSeparator" type="VSeparator" parent="Window/VBoxContainer/Timezone"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="LineEdit" type="LineEdit" parent="Window/VBoxContainer/Timezone"]
+layout_mode = 2
+placeholder_text = "Canada/Mountain"
+expand_to_text_length = true
+
 [connection signal="request_completed" from="HTTPRequest" to="." method="_on_http_request_request_completed"]
+[connection signal="close_requested" from="Window" to="Window" method="_on_close_requested"]
+[connection signal="meta_clicked" from="Window/VBoxContainer/Timezone/Label" to="Window" method="_on_label_meta_clicked"]
