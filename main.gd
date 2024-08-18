@@ -3,12 +3,14 @@ extends Control
 @onready var http: HTTPRequest = $HTTPRequest
 
 const url = "https://api.open-meteo.com/v1/forecast"
-const tags = ["latitude=40.7143", \
-			"longitude=-74.006", \
-			"hourly=temperature_2m", \
-			"current=temperature_2m", \
-			"timezone=Canada%2FMountain"]
-# Called when the node enters the scene tree for the first time.
+const tags = [
+			"hourly=temperature_2m",
+			"current=temperature_2m" ]
+
+var custom_tags = [
+			"latitude",
+			"longitude",
+			"timezone" ]
 
 const MONTHS = {
 	1: "January",
@@ -25,7 +27,15 @@ const MONTHS = {
 	12: "December"
 }
 
+var longitude = -113
+var latitude = 51
+var timezone = "Canada/Mountain"
+
 func _ready() -> void:
+	request()
+
+func request():
+
 	http.request(make_url())
 
 func make_url():
@@ -34,7 +44,20 @@ func make_url():
 	for tag in tags:
 		new_url += tag
 		new_url += "&"
+
+
+	var custom_tag_values = [latitude, longitude, timezone]
+
+	for i in custom_tags.size():
+		var tag = custom_tags[i]
+		var value = custom_tag_values[i]
+		new_url += tag + "="
+		new_url += str(value)
+		new_url += "&"
+
+
 	new_url = new_url.rstrip("&")
+	print(new_url)
 	return new_url
 
 func _on_http_request_request_completed(_r, _r_code, _h, body: PackedByteArray) -> void:
@@ -56,15 +79,16 @@ func _on_http_request_request_completed(_r, _r_code, _h, body: PackedByteArray) 
 		if int_hour < current_hour["hour"] and int(day) <= current_hour["day"]:
 			continue
 
-		var month = MONTHS[int(full_time.substr(5, 2))]
 		var str_hour: String
-		if int_hour > 11:
+		if int_hour >= 12:
 			if int_hour - 12 == 0:
 				str_hour = str(12) + "PM"
 			else:
 				str_hour = str(int_hour - 12) + "PM"
 		else:
 			str_hour = str(int_hour) + "AM"
+
+		var month = MONTHS[int(full_time.substr(5, 2))]
 
 		var new_label = Label.new()
 		new_label.text += month + " "
