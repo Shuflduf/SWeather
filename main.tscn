@@ -62,7 +62,7 @@ text = "Settings
 [node name="Settings" type="Window" parent="."]
 title = "Settings"
 initial_position = 1
-size = Vector2i(330, 150)
+size = Vector2i(330, 190)
 unresizable = true
 popup_window = true
 script = ExtResource("2_swnw0")
@@ -131,6 +131,7 @@ alignment = 1
 [node name="Label" type="RichTextLabel" parent="Settings/VBoxContainer/Timezone"]
 layout_mode = 2
 size_flags_horizontal = 4
+size_flags_vertical = 4
 tooltip_text = "https://en.wikipedia.org/wiki/List_of_tz_database_time_zones"
 bbcode_enabled = true
 text = "[url=https://en.wikipedia.org/wiki/List_of_tz_database_time_zones]Timezone"
@@ -147,6 +148,31 @@ layout_mode = 2
 text = "Canada/Mountain"
 placeholder_text = "Canada/Mountain"
 expand_to_text_length = true
+
+[node name="Units" type="HBoxContainer" parent="Settings/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+alignment = 1
+
+[node name="Label" type="Label" parent="Settings/VBoxContainer/Units"]
+layout_mode = 2
+size_flags_horizontal = 4
+tooltip_text = "https://en.wikipedia.org/wiki/List_of_tz_database_time_zones"
+text = "Units"
+
+[node name="VSeparator" type="VSeparator" parent="Settings/VBoxContainer/Units"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="Units" type="OptionButton" parent="Settings/VBoxContainer/Units"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 0
+fit_to_longest_item = false
+item_count = 2
+popup/item_0/text = "Celsius"
+popup/item_1/text = "Fahrenheit"
+popup/item_1/id = 1
 
 [node name="Buttons" type="HBoxContainer" parent="Settings/VBoxContainer"]
 layout_mode = 2

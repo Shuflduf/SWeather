@@ -3,13 +3,16 @@ extends Window
 @onready var latitude: SpinBox = %Latitude
 @onready var longitude: SpinBox = %Longitude
 @onready var timezone: LineEdit = %Timezone
-@onready var things = [latitude, longitude, timezone]
+@onready var units: OptionButton = %Units
+
+@onready var things = [latitude, longitude, timezone, units]
 
 func save_dict() -> Dictionary:
 	return {
 		"latitude" : latitude.value,
 		"longitude" : longitude.value,
-		"timezone" : timezone.text
+		"timezone" : timezone.text,
+		"units" : units.selected
 	}
 
 func _on_label_meta_clicked(meta: Variant) -> void:
@@ -30,6 +33,7 @@ func _on_save_pressed() -> void:
 	get_parent().latitude = latitude.value
 	get_parent().longitude = longitude.value
 	get_parent().timezone = timezone.text
+	get_parent().celsius = !bool(units.selected)
 	get_parent().request()
 	hide()
 
@@ -44,6 +48,7 @@ func cancel_changes():
 	latitude.value = get_parent().latitude
 	longitude.value = get_parent().longitude
 	timezone.text = get_parent().timezone
+	units.selected = int(!get_parent().celsius)
 	hide()
 
 func _ready() -> void:
@@ -55,7 +60,16 @@ func load_data():
 	var data: Dictionary = JSON.parse_string(
 		FileAccess.open("user://settings.txt", FileAccess.READ).get_line()
 	)
-	print(data)
+
 	for i in data.keys().size():
-		var prop = "value" if things[i] is SpinBox else "text"
+
+		var prop = ""
+		match things[i].get_class():
+			"SpinBox":
+				prop = "value"
+			"LineEdit":
+				prop = "text"
+			"OptionButton":
+				prop = "selected"
+
 		things[i].set(prop, data.values()[i])

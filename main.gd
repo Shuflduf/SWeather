@@ -31,6 +31,8 @@ var longitude = -113
 var latitude = 51
 var timezone = "Canada/Mountain"
 
+var celsius = true
+
 func _ready() -> void:
 	request()
 
@@ -43,6 +45,10 @@ func request():
 func make_url():
 	var new_url = url
 	new_url += "?"
+
+	if !celsius:
+		new_url += "temperature_unit=fahrenheit&"
+
 	for tag in tags:
 		new_url += tag
 		new_url += "&"
@@ -64,7 +70,7 @@ func make_url():
 func _on_http_request_request_completed(_r, _r_code, _h, body: PackedByteArray) -> void:
 	FileAccess.open("data.json", FileAccess.WRITE).store_buffer(body)
 	var data: Dictionary = JSON.parse_string(body.get_string_from_utf8())
-	%Temperature.text = str(data["current"]["temperature_2m"])
+	%Temperature.text = str(data["current"]["temperature_2m"]).pad_decimals(1)
 
 	var current_day: int
 	var current_hour = Time.get_datetime_dict_from_system()
@@ -95,7 +101,7 @@ func _on_http_request_request_completed(_r, _r_code, _h, body: PackedByteArray) 
 		new_label.text += month + " "
 		new_label.text += day + " "
 		new_label.text += str_hour + " "
-		new_label.text += str(data["hourly"]["temperature_2m"][i])
+		new_label.text += str(data["hourly"]["temperature_2m"][i]).pad_decimals(1)
 		new_label.text += str(data["hourly_units"]["temperature_2m"])
 
 		%Temps.add_child(new_label)
