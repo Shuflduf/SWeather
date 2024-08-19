@@ -3,6 +3,8 @@ extends Control
 @onready var http: HTTPRequest = $HTTPRequest
 @onready var tabs: VBoxContainer = $MarginContainer/HBoxContainer/Tabs
 
+@export var tab: WeatherButton
+
 const url = "https://api.open-meteo.com/v1/forecast"
 
 var persistent_tags = [
@@ -30,13 +32,14 @@ var latitude = 51
 var timezone = "Canada/Mountain"
 var celsius = true
 
+var data: Dictionary
+
 func _ready() -> void:
 	request()
 
 func request():
 	%Main.text = "Loading"
-	for i in %Forecast.get_children():
-		i.queue_free()
+
 	http.request(make_url())
 
 func make_url():
@@ -68,8 +71,13 @@ func make_url():
 
 func _on_http_request_request_completed(_r, _r_code, _h, body: PackedByteArray) -> void:
 	FileAccess.open("data.json", FileAccess.WRITE).store_buffer(body)
-	var data: Dictionary = JSON.parse_string(body.get_string_from_utf8())
-	%Main.text = str(data["current"]["temperature_2m"]).pad_decimals(1)
+	data = JSON.parse_string(body.get_string_from_utf8())
+	set_info()
+
+func set_info():
+	for i in %Forecast.get_children():
+		i.queue_free()
+	%Main.text = tab.format_main()
 
 	var current_day: int
 	var current_hour = Time.get_datetime_dict_from_system()
@@ -96,14 +104,18 @@ func _on_http_request_request_completed(_r, _r_code, _h, body: PackedByteArray) 
 
 		var month = MONTHS[int(full_time.substr(5, 2))]
 
-		var new_label = Label.new()
+		var new_label = RichTextLabel.new()
+		new_label.bbcode_enabled = true
+		new_label.fit_content = true
+		new_label.autowrap_mode = TextServer.AUTOWRAP_OFF
+		new_label.text += "[font_size=10]"
 		new_label.text += month + " "
 		new_label.text += day + " "
 		new_label.text += str_hour + " "
-		new_label.text += str(data["hourly"]["temperature_2m"][i]).pad_decimals(1)
-		new_label.text += str(data["hourly_units"]["temperature_2m"])
+		new_label.text += "[/font_size]"
+		new_label.text += tab.format_data(i)
 
-		%Temps.add_child(new_label)
+		%Forecast.add_child(new_label)
 
 
 func _on_refresh_button_pressed() -> void:
