@@ -19,5 +19,4 @@ Customise Settings:
   - Degrees
   - Distance
   - Speed
-  - 
 ![image](https://github.com/user-attachments/assets/53a5b34e-e387-4308-b69b-d68decc3de64)
