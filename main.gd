@@ -80,8 +80,6 @@ func make_url():
 		SpeedUnits.KNOTS:
 			new_url += "wind_speed_unit=kn&"
 
-	#new_url += "wind_speed_unit=ms&"
-
 	match rain_unit:
 		PrecipitationUnits.INCH:
 			new_url += "precipitation_unit=inch&"

@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://cea47gh2npyxr"]
+[gd_scene load_steps=8 format=3 uid="uid://cea47gh2npyxr"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_27w4e"]
 [ext_resource type="Script" path="res://temperature.gd" id="2_hr3ep"]
 [ext_resource type="Script" path="res://settings.gd" id="2_swnw0"]
 [ext_resource type="Script" path="res://precipitation.gd" id="3_w4ml4"]
 [ext_resource type="Script" path="res://wind.gd" id="4_2gflt"]
+[ext_resource type="Script" path="res://clouds.gd" id="5_qlsli"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_a3ylj"]
 font_size = 20
@@ -57,6 +58,13 @@ layout_mode = 2
 text = "Wind"
 script = ExtResource("4_2gflt")
 info = Array[String](["hourly=wind_speed_10m", "hourly=wind_direction_10m", "current=wind_speed_10m", "current=wind_direction_10m"])
+
+[node name="Clouds" type="Button" parent="MarginContainer/HBoxContainer/Tabs"]
+layout_mode = 2
+text = "Clouds
+"
+script = ExtResource("5_qlsli")
+info = Array[String](["current=cloud_cover", "hourly=cloud_cover"])
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/HBoxContainer"]
 clip_contents = false

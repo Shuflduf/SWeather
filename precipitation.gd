@@ -2,7 +2,16 @@ extends WeatherButton
 
 
 func format_data(i: int) -> String:
-	return str(owner.data["hourly"]["precipitation_probability"][i]) + "%"
+	var new_str = ""
+	new_str += str(owner.data["hourly"]["precipitation_probability"][i])
+	new_str += str(owner.data["hourly_units"]["precipitation_probability"])
+	new_str += " / "
+	new_str += str(owner.data["hourly"]["precipitation"][i]) + " "
+	new_str += str(owner.data["hourly_units"]["precipitation"])
+	return new_str
 
 func format_main() -> String:
-	return str(owner.data["current"]["precipitation"]).pad_decimals(1)
+	var new_str = ""
+	new_str += str(owner.data["current"]["precipitation"]) + " "
+	new_str += str(owner.data["hourly_units"]["precipitation"])
+	return new_str
