@@ -68,8 +68,21 @@ func make_url():
 	var new_url = url
 	new_url += "?"
 
-	if temperature_unit == TemperatureUnits.FAHRENHEIT:
-		new_url += "temperature_unit=fahrenheit&"
+	match temperature_unit:
+		TemperatureUnits.FAHRENHEIT:
+			new_url += "temperature_unit=fahrenheit&"
+
+	match speed_unit:
+		SpeedUnits.MS:
+			new_url += "wind_speed_unit=ms&"
+		SpeedUnits.MPH:
+			new_url += "wind_speed_unit=mph&"
+		SpeedUnits.MS:
+			new_url += "wind_speed_unit=kn&"
+
+	match rain_unit:
+		PrecipitationUnits.INCH:
+			new_url += "precipitation_unit=inch&"
 
 	@warning_ignore("shadowed_variable")
 	for tab in tabs.get_children():
@@ -89,7 +102,7 @@ func make_url():
 
 
 	new_url = new_url.rstrip("&")
-	print(new_url)
+	#print(new_url)
 	return new_url
 
 func _on_http_request_request_completed(_r, _r_code, _h, body: PackedByteArray) -> void:

@@ -46,8 +46,12 @@ func _on_save_pressed() -> void:
 	get_parent().request()
 	hide()
 
-	FileAccess.open("user://settings.txt", FileAccess.WRITE)\
-			.store_line(JSON.stringify(save_dict()))
+	var settings_file = FileAccess.open("user://settings.txt", FileAccess.WRITE)
+	for i in save_dict().keys():
+		var value = str(save_dict()[i])
+		if save_dict()[i] is String:
+			value = '"' + str(save_dict()[i]) + '"'
+		settings_file.store_line('{"' + str(i) + '": ' + value + '}')
 
 
 func _on_cancel_pressed() -> void:
@@ -67,22 +71,24 @@ func cancel_changes():
 func _ready() -> void:
 	load_data()
 
+
 func load_data():
 	if !FileAccess.file_exists("user://settings.txt"):
 		return
-	var data: Dictionary = JSON.parse_string(
-		FileAccess.open("user://settings.txt", FileAccess.READ).get_line()
-	)
-
-	for i in data.keys().size():
-
+	var data_file = FileAccess.open("user://settings.txt", FileAccess.READ)
+	var i = 0
+	while data_file.get_position() < data_file.get_length():
+		var data = JSON.parse_string(data_file.get_line())
+		print(data)
 		var prop = ""
 		match things[i].get_class():
 			"SpinBox":
 				prop = "value"
 			"LineEdit":
+				print("AHHHHHHH")
 				prop = "text"
 			"OptionButton":
 				prop = "selected"
 
-		things[i].set(prop, data.values()[i])
+		things[i].set(prop, data.values()[0])
+		i += 1
