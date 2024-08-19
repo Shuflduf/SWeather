@@ -30,24 +30,24 @@ const MONTHS = {
 
 enum TemperatureUnits {
 	CELSIUS,
-	FAHRENHEIT
+	FAHRENHEIT,
 }
 
 enum SpeedUnits {
 	KMH,
 	MS,
 	MPH,
-	KNOTS
+	KNOTS,
 }
 
 enum PrecipitationUnits {
 	MM,
-	INCH
+	INCH,
 }
 
 var longitude = -113
 var latitude = 51
-var timezone = "Canada/Mountain"
+var timezone = ""
 
 var temperature_unit = TemperatureUnits.CELSIUS
 var speed_unit = SpeedUnits.KMH
@@ -56,7 +56,7 @@ var rain_unit = PrecipitationUnits.MM
 var data: Dictionary
 
 func _ready() -> void:
-	request()
+	request.call_deferred()
 
 func request():
 	%Main.text = "Loading"
@@ -77,8 +77,10 @@ func make_url():
 			new_url += "wind_speed_unit=ms&"
 		SpeedUnits.MPH:
 			new_url += "wind_speed_unit=mph&"
-		SpeedUnits.MS:
+		SpeedUnits.KNOTS:
 			new_url += "wind_speed_unit=kn&"
+
+	#new_url += "wind_speed_unit=ms&"
 
 	match rain_unit:
 		PrecipitationUnits.INCH:
@@ -102,7 +104,7 @@ func make_url():
 
 
 	new_url = new_url.rstrip("&")
-	#print(new_url)
+	print(new_url)
 	return new_url
 
 func _on_http_request_request_completed(_r, _r_code, _h, body: PackedByteArray) -> void:

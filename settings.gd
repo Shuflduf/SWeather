@@ -34,6 +34,20 @@ func _on_show_button_pressed() -> void:
 
 
 func _on_save_pressed() -> void:
+	var settings_file = FileAccess.open("user://settings.txt", FileAccess.WRITE)
+
+	for i in save_dict().keys():
+		var value = str(save_dict()[i])
+		if save_dict()[i] is String:
+			value = '"' + str(save_dict()[i]) + '"'
+		settings_file.store_line('{"' + str(i) + '": ' + value + '}')
+
+	update_parent()
+	get_parent().request()
+	hide()
+
+
+func update_parent():
 	get_parent().latitude = latitude.value
 	get_parent().longitude = longitude.value
 	get_parent().timezone = timezone.text
@@ -41,17 +55,6 @@ func _on_save_pressed() -> void:
 	get_parent().temperature_unit = temperature.selected
 	get_parent().speed_unit = wind_speed.selected
 	get_parent().rain_unit = precipitation.selected
-
-
-	get_parent().request()
-	hide()
-
-	var settings_file = FileAccess.open("user://settings.txt", FileAccess.WRITE)
-	for i in save_dict().keys():
-		var value = str(save_dict()[i])
-		if save_dict()[i] is String:
-			value = '"' + str(save_dict()[i]) + '"'
-		settings_file.store_line('{"' + str(i) + '": ' + value + '}')
 
 
 func _on_cancel_pressed() -> void:
@@ -70,7 +73,7 @@ func cancel_changes():
 
 func _ready() -> void:
 	load_data()
-
+	update_parent()
 
 func load_data():
 	if !FileAccess.file_exists("user://settings.txt"):
@@ -79,13 +82,11 @@ func load_data():
 	var i = 0
 	while data_file.get_position() < data_file.get_length():
 		var data = JSON.parse_string(data_file.get_line())
-		print(data)
 		var prop = ""
 		match things[i].get_class():
 			"SpinBox":
 				prop = "value"
 			"LineEdit":
-				print("AHHHHHHH")
 				prop = "text"
 			"OptionButton":
 				prop = "selected"
