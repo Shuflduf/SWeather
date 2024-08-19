@@ -27,10 +27,31 @@ const MONTHS = {
 	12: "December"
 }
 
+
+enum TemperatureUnits {
+	CELSIUS,
+	FAHRENHEIT
+}
+
+enum SpeedUnits {
+	KMH,
+	MS,
+	MPH,
+	KNOTS
+}
+
+enum PrecipitationUnits {
+	MM,
+	INCH
+}
+
 var longitude = -113
 var latitude = 51
 var timezone = "Canada/Mountain"
-var celsius = true
+
+var temperature_unit = TemperatureUnits.CELSIUS
+var speed_unit = SpeedUnits.KMH
+var rain_unit = PrecipitationUnits.MM
 
 var data: Dictionary
 
@@ -39,16 +60,18 @@ func _ready() -> void:
 
 func request():
 	%Main.text = "Loading"
-
+	for i in %Forecast.get_children():
+		i.queue_free()
 	http.request(make_url())
 
 func make_url():
 	var new_url = url
 	new_url += "?"
 
-	if !celsius:
+	if temperature_unit == TemperatureUnits.FAHRENHEIT:
 		new_url += "temperature_unit=fahrenheit&"
 
+	@warning_ignore("shadowed_variable")
 	for tab in tabs.get_children():
 		for tag in tab.info:
 			new_url += tag

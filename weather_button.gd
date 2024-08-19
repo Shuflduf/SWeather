@@ -3,7 +3,7 @@ extends Button
 
 @export var info: Array[String]
 
-func format_data(i: int) -> String:
+func format_data(_i: int) -> String:
 	return ""
 
 func format_main() -> String:
