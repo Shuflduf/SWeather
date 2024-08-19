@@ -35,7 +35,8 @@ func _ready() -> void:
 	request()
 
 func request():
-
+	for i in %Temps.get_children():
+		i.queue_free()
 	http.request(make_url())
 
 func make_url():
@@ -63,7 +64,7 @@ func make_url():
 func _on_http_request_request_completed(_r, _r_code, _h, body: PackedByteArray) -> void:
 	FileAccess.open("data.json", FileAccess.WRITE).store_buffer(body)
 	var data: Dictionary = JSON.parse_string(body.get_string_from_utf8())
-	$MarginContainer/ScrollContainer/Temps/Temp.text = str(data["current"]["temperature_2m"])
+	%Temperature.text = str(data["current"]["temperature_2m"])
 
 	var current_day: int
 	var current_hour = Time.get_datetime_dict_from_system()
@@ -97,4 +98,4 @@ func _on_http_request_request_completed(_r, _r_code, _h, body: PackedByteArray) 
 		new_label.text += str(data["hourly"]["temperature_2m"][i])
 		new_label.text += str(data["hourly_units"]["temperature_2m"])
 
-		$MarginContainer/ScrollContainer/Temps.add_child(new_label)
+		%Temps.add_child(new_label)
