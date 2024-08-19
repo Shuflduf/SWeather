@@ -11,12 +11,14 @@ config_version=5
 [application]
 
 config/name="Weather"
-run/main_scene="res://main.tscn"
+run/main_scene="res://scenes/main.tscn"
 config/use_custom_user_dir=true
-config/custom_user_dir_name="ShufWeather"
+config/custom_user_dir_name="Sweather"
 config/features=PackedStringArray("4.3", "Mobile")
-config/icon="res://icon.svg"
+config/icon="res://sweather.png"
 
 [rendering]
 
-renderer/rendering_method="mobile"
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
