@@ -105,3 +105,7 @@ func _on_http_request_request_completed(_r, _r_code, _h, body: PackedByteArray) 
 		new_label.text += str(data["hourly_units"]["temperature_2m"])
 
 		%Temps.add_child(new_label)
+
+
+func _on_refresh_button_pressed() -> void:
+	request()
