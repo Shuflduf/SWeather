@@ -62,6 +62,7 @@ func request():
 	%Main.text = "Loading"
 	for i in %Forecast.get_children():
 		i.queue_free()
+	data = {}
 	http.request(make_url())
 
 func make_url():

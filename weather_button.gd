@@ -11,5 +11,6 @@ func format_main() -> String:
 
 func _ready() -> void:
 	pressed.connect(func():
-		owner.tab = self
-		owner.set_info())
+		if owner.data != {}:
+			owner.tab = self
+			owner.set_info())
