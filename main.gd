@@ -1,13 +1,11 @@
 extends Control
 
 @onready var http: HTTPRequest = $HTTPRequest
+@onready var tabs: VBoxContainer = $MarginContainer/HBoxContainer/Tabs
 
 const url = "https://api.open-meteo.com/v1/forecast"
-const tags = [
-			"hourly=temperature_2m",
-			"current=temperature_2m" ]
 
-var custom_tags = [
+var persistent_tags = [
 			"latitude",
 			"longitude",
 			"timezone" ]
@@ -30,15 +28,14 @@ const MONTHS = {
 var longitude = -113
 var latitude = 51
 var timezone = "Canada/Mountain"
-
 var celsius = true
 
 func _ready() -> void:
 	request()
 
 func request():
-	%Temperature.text = "Loading"
-	for i in %Temps.get_children():
+	%Main.text = "Loading"
+	for i in %Forecast.get_children():
 		i.queue_free()
 	http.request(make_url())
 
@@ -49,15 +46,16 @@ func make_url():
 	if !celsius:
 		new_url += "temperature_unit=fahrenheit&"
 
-	for tag in tags:
-		new_url += tag
-		new_url += "&"
+	for tab in tabs.get_children():
+		for tag in tab.info:
+			new_url += tag
+			new_url += "&"
 
 
 	var custom_tag_values = [latitude, longitude, timezone]
 
-	for i in custom_tags.size():
-		var tag = custom_tags[i]
+	for i in persistent_tags.size():
+		var tag = persistent_tags[i]
 		var value = custom_tag_values[i]
 		new_url += tag + "="
 		new_url += str(value)
@@ -65,12 +63,13 @@ func make_url():
 
 
 	new_url = new_url.rstrip("&")
+	print(new_url)
 	return new_url
 
 func _on_http_request_request_completed(_r, _r_code, _h, body: PackedByteArray) -> void:
 	FileAccess.open("data.json", FileAccess.WRITE).store_buffer(body)
 	var data: Dictionary = JSON.parse_string(body.get_string_from_utf8())
-	%Temperature.text = str(data["current"]["temperature_2m"]).pad_decimals(1)
+	%Main.text = str(data["current"]["temperature_2m"]).pad_decimals(1)
 
 	var current_day: int
 	var current_hour = Time.get_datetime_dict_from_system()
@@ -80,7 +79,7 @@ func _on_http_request_request_completed(_r, _r_code, _h, body: PackedByteArray) 
 		var day = full_time.substr(8, 2)
 		if current_day != int(day):
 			current_day = int(day)
-			%Temps.add_child(HSeparator.new())
+			%Forecast.add_child(HSeparator.new())
 
 		var int_hour = int(full_time.substr(11, 2))
 		if int_hour < current_hour["hour"] and int(day) <= current_hour["day"]:
