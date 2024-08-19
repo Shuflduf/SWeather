@@ -35,6 +35,7 @@ func _ready() -> void:
 	request()
 
 func request():
+	%Temperature.text = "Loading"
 	for i in %Temps.get_children():
 		i.queue_free()
 	http.request(make_url())
@@ -58,7 +59,6 @@ func make_url():
 
 
 	new_url = new_url.rstrip("&")
-	print(new_url)
 	return new_url
 
 func _on_http_request_request_completed(_r, _r_code, _h, body: PackedByteArray) -> void:
