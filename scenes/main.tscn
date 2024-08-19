@@ -216,6 +216,7 @@ bbcode_enabled = true
 text = "[url=https://en.wikipedia.org/wiki/List_of_tz_database_time_zones]Timezone"
 fit_content = true
 autowrap_mode = 0
+script = ExtResource("7_7h5y8")
 
 [node name="VSeparator" type="VSeparator" parent="Settings/VBoxContainer/Timezone"]
 layout_mode = 2
@@ -339,6 +340,5 @@ mouse_filter = 2
 [connection signal="pressed" from="HBoxContainer/RefreshButton" to="." method="_on_refresh_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/SettingsButton" to="Settings" method="_on_show_button_pressed"]
 [connection signal="close_requested" from="Settings" to="Settings" method="_on_close_requested"]
-[connection signal="meta_clicked" from="Settings/VBoxContainer/Timezone/Label" to="Settings" method="_on_label_meta_clicked"]
 [connection signal="pressed" from="Settings/VBoxContainer/Buttons/Save" to="Settings" method="_on_save_pressed"]
 [connection signal="pressed" from="Settings/VBoxContainer/Buttons/Cancel" to="Settings" method="_on_cancel_pressed"]
